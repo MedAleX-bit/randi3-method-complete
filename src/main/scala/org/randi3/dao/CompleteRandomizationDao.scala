@@ -20,8 +20,9 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
       threadLocalSession withTransaction {
         RandomizationMethods.noId insert (trialId, generateBlob(randomizationMethod.random), randomizationMethod.getClass().getName())
       }
+      getId(trialId)
     }
-    getId(trialId)
+
   }
 
   def get(id: Int): Validation[String, Option[CompleteRandomization]] = {
