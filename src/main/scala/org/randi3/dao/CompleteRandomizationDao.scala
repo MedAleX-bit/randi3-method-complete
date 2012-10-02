@@ -70,7 +70,11 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
   }
 
   def delete(randomizationMethod: CompleteRandomization) {
-
+    database withSession {
+      queryRandomizationMethodFromId(randomizationMethod.id).mutate { r =>
+       r.delete()
+      }
+    }
   }
 
 }
