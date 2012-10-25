@@ -30,7 +30,7 @@ class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile) e
    (Nil, Nil)
   }
 
-  def getRandomizationConfigurations: List[ConfigurationProperty[Any]] = {
+  def getRandomizationConfigurations(id: Int): List[ConfigurationProperty[Any]] = {
     Nil
   }
 
