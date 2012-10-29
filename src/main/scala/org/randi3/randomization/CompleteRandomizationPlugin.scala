@@ -16,7 +16,7 @@ import scalaz._
 
 class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile) extends RandomizationMethodPlugin(database, driver) {
 
-  val name = CompleteRandomization.getClass.getName.substring(0,  CompleteRandomization.getClass.getName.size - 1)
+  val name = classOf[CompleteRandomization].getName
 
   val i18nName = name
 
