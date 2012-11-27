@@ -2,18 +2,19 @@ package org.randi3.dao
 
 import org.randi3.schema.DatabaseSchema._
 
-import org.scalaquery.session.Database
+import scala.slick.session.Database
 import org.scalaquery.session._
-import org.scalaquery.session.Database.threadLocalSession
+import scala.slick.session.Database.threadLocalSession
 import org.scalaquery.ql._
 import org.scalaquery.ql.TypeMapper._
-import org.scalaquery.ql.extended.ExtendedProfile
+import scala.slick.driver.ExtendedProfile
 import scalaz._
 
 import org.randi3.randomization.CompleteRandomization
 
 class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) extends AbstractRandomizationMethodDao(database, driver) {
-  import driver.Implicit._
+  import driver.simple._
+  import schema._
 
   def create(randomizationMethod: CompleteRandomization, trialId: Int): Validation[String, Int] = {
     database withSession {
@@ -32,7 +33,7 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
       else if (resultList.size == 1) {
         val rm = resultList(0)
         if (rm._3 == classOf[CompleteRandomization].getName()) {
-          Success(Some(new CompleteRandomization(rm._1.get, 0, deserializeRandomGenerator(rm._2.get))))
+          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._2.get))))
         } else {
           Failure("Wrong plugin")
         }
@@ -48,7 +49,7 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
       else if (resultList.size == 1) {
         val rm = resultList(0)
         if (rm._4 == classOf[CompleteRandomization].getName()) {
-          Success(Some(new CompleteRandomization(rm._1.get, 0, deserializeRandomGenerator(rm._3.get))))
+          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._3.get))))
         } else {
           Failure("Wrong plugin")
         }

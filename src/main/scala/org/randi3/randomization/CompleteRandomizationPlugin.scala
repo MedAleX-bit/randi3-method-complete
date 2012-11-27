@@ -1,15 +1,14 @@
 package org.randi3.randomization
 
-import org.randi3.randomization._
+
 import org.randi3.randomization.configuration._
 import org.randi3.dao.CompleteRandomizationDao
 import org.randi3.model._
-import org.randi3.model.criterion.Criterion
 import org.randi3.model.criterion.constraint.Constraint
 import criterion.Criterion
-import org.scalaquery.ql._
-import org.scalaquery.ql.extended.ExtendedProfile
-import org.scalaquery.session.Database
+import scala.slick.lifted._
+import scala.slick.session.Database
+import scala.slick.driver.ExtendedProfile
 
 import org.apache.commons.math3.random._
 import scalaz._
@@ -35,7 +34,7 @@ class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile) e
   }
 
   def randomizationMethod(random: RandomGenerator, trial: Trial, configuration: List[ConfigurationProperty[Any]]): Validation[String, RandomizationMethod] = {
-    Success(new CompleteRandomization(random = random))
+    Success(new CompleteRandomization()(random = random))
   }
 
   def databaseTables(): Option[DDL] = {
