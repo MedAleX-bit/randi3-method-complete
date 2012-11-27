@@ -2,18 +2,18 @@ package org.randi3.dao
 
 import org.randi3.schema.DatabaseSchema._
 
-import scala.slick.session.Database
+import org.scalaquery.session.Database
 import org.scalaquery.session._
-import scala.slick.session.Database.threadLocalSession
+import Database.threadLocalSession
 import org.scalaquery.ql._
 import org.scalaquery.ql.TypeMapper._
-import scala.slick.driver.ExtendedProfile
+import org.scalaquery.ql.extended.ExtendedProfile
 import scalaz._
 
 import org.randi3.randomization.CompleteRandomization
 
 class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) extends AbstractRandomizationMethodDao(database, driver) {
-  import driver.simple._
+  import driver.Implicit._
   import schema._
 
   def create(randomizationMethod: CompleteRandomization, trialId: Int): Validation[String, Int] = {
