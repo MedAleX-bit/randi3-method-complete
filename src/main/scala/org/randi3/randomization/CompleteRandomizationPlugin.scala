@@ -41,6 +41,10 @@ class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile) e
     None
   }
 
+  def updateDatabase() {
+    //Nothing to do
+  }
+
   def create(randomizationMethod: RandomizationMethod, trialId: Int): Validation[String, Int] = {
     completeRandomizationDao.create(randomizationMethod.asInstanceOf[CompleteRandomization], trialId)
   }
