@@ -1,4 +1,4 @@
-package org.randi3.method.complete
+package org.randi3.method
 
 import org.junit.runner.RunWith
 import org.scalatest.matchers.MustMatchers
