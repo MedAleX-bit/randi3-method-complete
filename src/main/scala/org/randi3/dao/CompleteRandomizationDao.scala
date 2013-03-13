@@ -19,7 +19,7 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
   def create(randomizationMethod: CompleteRandomization, trialId: Int): Validation[String, Int] = {
     database withSession {
       threadLocalSession withTransaction {
-        RandomizationMethods.noId insert (trialId, generateBlob(randomizationMethod.random), randomizationMethod.getClass().getName())
+        RandomizationMethods.noId insert (trialId, generateBlob(randomizationMethod.random).get, randomizationMethod.getClass().getName())
       }
       getId(trialId)
     }
@@ -28,39 +28,45 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
 
   def get(id: Int): Validation[String, Option[CompleteRandomization]] = {
     database withSession {
+      threadLocalSession withTransaction {
       val resultList = queryRandomizationMethodFromId(id).list
       if (resultList.isEmpty) Success(None)
       else if (resultList.size == 1) {
         val rm = resultList(0)
         if (rm._3 == classOf[CompleteRandomization].getName()) {
-          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._2.get))))
+          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._2))))
         } else {
           Failure("Wrong plugin")
         }
 
       } else Failure("More than one method with id=" + id + " found")
     }
+    }
   }
 
   def getFromTrialId(trialId: Int): Validation[String, Option[CompleteRandomization]] = {
     database withSession {
+      threadLocalSession withTransaction {
       val resultList = queryRandomizationMethodFromTrialId(trialId).list
       if (resultList.isEmpty) Success(None)
       else if (resultList.size == 1) {
         val rm = resultList(0)
         if (rm._4 == classOf[CompleteRandomization].getName()) {
-          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._3.get))))
+          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._3))))
         } else {
           Failure("Wrong plugin")
         }
       } else Failure("More than one method for trial with id=" + trialId + " found")
     }
+    }
   }
 
   def update(randomizationMethod: CompleteRandomization): Validation[String, CompleteRandomization] = {
     database withSession {
+      threadLocalSession withTransaction {
       queryRandomizationMethodFromId(randomizationMethod.id).mutate { r =>
-        r.row = r.row.copy(_2 = generateBlob(randomizationMethod.random), _3 = randomizationMethod.getClass().getName())
+        r.row = r.row.copy(_2 = generateBlob(randomizationMethod.random).get, _3 = randomizationMethod.getClass().getName())
+      }
       }
     }
     
@@ -73,8 +79,10 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
 
   def delete(randomizationMethod: CompleteRandomization) {
     database withSession {
+      threadLocalSession withTransaction {
       queryRandomizationMethodFromId(randomizationMethod.id).mutate { r =>
        r.delete()
+      }
       }
     }
   }
