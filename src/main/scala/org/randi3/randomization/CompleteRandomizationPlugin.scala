@@ -12,21 +12,26 @@ import org.scalaquery.ql.extended.ExtendedProfile
 import org.apache.commons.math3.random._
 import scalaz._
 import org.scalaquery.ql.DDL
+import org.randi3.utility.{I18NHelper, AbstractSecurityUtil}
+import org.randi3.utility.I18NRandomization
 
-class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile) extends RandomizationMethodPlugin(database, driver) {
+class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile, securityUtil: AbstractSecurityUtil) extends RandomizationMethodPlugin(database, driver, securityUtil){
+
+
+  private val i18n = new I18NRandomization(I18NHelper.getLocalizationMap("completeRandomizationM", getClass.getClassLoader), securityUtil)
 
   val name = classOf[CompleteRandomization].getName
 
-  val i18nName = name
+  def i18nName = i18n.text("name")
 
-  val description = "Simple complete randomization method (ignores stratification options and different treatment proportions)"
+  def description = i18n.text("description")
 
   val canBeUsedWithStratification = false
 
   private val completeRandomizationDao = new CompleteRandomizationDao(database, driver)
 
-  def randomizationConfigurationOptions(): (List[ConfigurationType[Any]], List[Criterion[_ <: Any, Constraint[_ <: Any]]])= {
-   (Nil, Nil)
+  def randomizationConfigurationOptions(): (List[ConfigurationType[Any]], Map[String, List[Criterion[_ <: Any, Constraint[_ <: Any]]]])= {
+   (Nil, Map())
   }
 
   def getRandomizationConfigurations(id: Int): List[ConfigurationProperty[Any]] = {
