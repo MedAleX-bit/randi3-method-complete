@@ -19,7 +19,9 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
   def create(randomizationMethod: CompleteRandomization, trialId: Int): Validation[String, Int] = {
     database withSession {
       threadLocalSession withTransaction {
-        RandomizationMethods.noId insert (trialId, generateBlob(randomizationMethod.random).get, randomizationMethod.getClass().getName())
+        val seed = randomizationMethod.random.nextLong()
+        randomizationMethod.random.setSeed(seed)
+        RandomizationMethods.noId insert (trialId, generateBlob(randomizationMethod.random).get, randomizationMethod.getClass().getName(), seed)
       }
       getId(trialId)
     }
