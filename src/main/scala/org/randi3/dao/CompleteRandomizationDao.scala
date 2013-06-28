@@ -35,8 +35,8 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
       if (resultList.isEmpty) Success(None)
       else if (resultList.size == 1) {
         val rm = resultList(0)
-        if (rm._3 == classOf[CompleteRandomization].getName()) {
-          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._2))))
+        if (rm._4 == classOf[CompleteRandomization].getName()) {
+          Success(Some(new CompleteRandomization(rm._1.get, 0)(deserializeRandomGenerator(rm._3))))
         } else {
           Failure("Wrong plugin")
         }
@@ -67,7 +67,7 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
     database withSession {
       threadLocalSession withTransaction {
       queryRandomizationMethodFromId(randomizationMethod.id).mutate { r =>
-        r.row = r.row.copy(_2 = generateBlob(randomizationMethod.random).get, _3 = randomizationMethod.getClass().getName())
+        r.row = r.row.copy(_3 = generateBlob(randomizationMethod.random).get, _4 = randomizationMethod.getClass().getName())
       }
       }
     }
