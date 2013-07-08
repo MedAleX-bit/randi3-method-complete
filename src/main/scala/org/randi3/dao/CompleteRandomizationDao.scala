@@ -2,15 +2,13 @@ package org.randi3.dao
 
 import org.randi3.schema.DatabaseSchema._
 
-import org.scalaquery.session.Database
-import org.scalaquery.session._
+import scala.slick.session.Database
 import Database.threadLocalSession
-import org.scalaquery.ql._
-import org.scalaquery.ql.TypeMapper._
-import org.scalaquery.ql.extended.ExtendedProfile
-import scalaz._
 
 import org.randi3.randomization.CompleteRandomization
+import scala.slick.driver.ExtendedProfile
+import scalaz._
+import scalaz.Scalaz._
 
 class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) extends AbstractRandomizationMethodDao(database, driver) {
   import driver.Implicit._
@@ -72,7 +70,7 @@ class CompleteRandomizationDao(database: Database, driver: ExtendedProfile) exte
       }
     }
     
-    get(randomizationMethod.id).either match {
+    get(randomizationMethod.id).toEither match {
       case Left(x) => Failure(x)
       case Right(None) => Failure("Method not found")
       case Right(Some(randomizationMethod)) => Success(randomizationMethod)

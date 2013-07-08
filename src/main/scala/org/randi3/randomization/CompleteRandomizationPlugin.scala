@@ -6,14 +6,15 @@ import org.randi3.dao.CompleteRandomizationDao
 import org.randi3.model._
 import org.randi3.model.criterion.constraint.Constraint
 import criterion.Criterion
-import org.scalaquery.session.Database
-import org.scalaquery.ql.extended.ExtendedProfile
+import scala.slick.session.Database
 
 import org.apache.commons.math3.random._
 import scalaz._
-import org.scalaquery.ql.DDL
+
 import org.randi3.utility.{I18NHelper, AbstractSecurityUtil}
 import org.randi3.utility.I18NRandomization
+import scala.slick.driver.ExtendedProfile
+import scala.slick.lifted.DDL
 
 class CompleteRandomizationPlugin(database: Database, driver: ExtendedProfile, securityUtil: AbstractSecurityUtil) extends RandomizationMethodPlugin(database, driver, securityUtil){
 
